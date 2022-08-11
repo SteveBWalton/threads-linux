@@ -8,6 +8,11 @@
 #include <iostream>
 #include <unistd.h>
 #include <thread>
+#include <functional>
+
+// Application Headers.
+#include "thread_pool.h"
+
 
 
 /// Display a number and then wait for one second.
@@ -57,6 +62,23 @@ int main
         // Wait for this thread to finish.
         myThreads[i]->join();
     }
+    std::cout << std::endl;
+
+    // Call the function n times with thread pool object.
+    ThreadPool threadPool(4);
+    for (int i = 0; i < NUM_LOOPS; i++)
+    {
+        threadPool.doJob(std::bind(showNumber, i));
+    }
+    threadPool.waitAllFinish();
+    std::cout << std::endl;
+
+    // Lets go again with the thread pool.
+    for (int i = 0; i < NUM_LOOPS; i++)
+    {
+        threadPool.doJob(std::bind(showNumber, i));
+    }
+    threadPool.waitAllFinish();
     std::cout << std::endl;
 
     // Return success.

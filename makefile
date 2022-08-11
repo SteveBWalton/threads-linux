@@ -29,13 +29,17 @@ HEADERS := parallel.h
 # Source objects (prefix with obj/)
 #
 OBJS := \
-obj/parallel.o 
+obj/parallel.o \
+obj/thread_pool.o
 
-bin/keysync : $(OBJS)
+bin/parallel : $(OBJS)
 	g++ $(OPTIONS) -o bin/parallel $(OBJS) $(LIBDIR) $(LIBS)
 
 obj/parallel.o : parallel.cpp $(HEADERS)
 	g++ -c $(OPTIONS) -o obj/parallel.o parallel.cpp
+
+obj/thread_pool.o : thread_pool.cpp $(HEADERS)
+	g++ -c $(OPTIONS) -o obj/thread_pool.o thread_pool.cpp
 
 clean:
 	-rm bin/parallel 2>/dev/null
