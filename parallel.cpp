@@ -8,6 +8,7 @@
 #include <iostream>
 #include <thread>
 #include <functional>
+#include <mutex>
 
 // Application Headers.
 #include "thread_pool.h"
@@ -18,6 +19,13 @@
 std::mutex mutexShowNumber_;
 
 
+void pause()
+{
+    // Wait for 1 second.
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+}
+
+
 
 /// Display a number and then wait for one second.
 void showNumber
@@ -25,11 +33,23 @@ void showNumber
     int number  ///< Specifies the number to display.
 )
 {
-    // Wait for 1 second.
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    // Sleep / do work.
+    pause();
 
-    // Wait for all showNumber functions to finish.
+    // Wait for all showNumber functions to write.
     std::unique_lock <std::mutex> lock(mutexShowNumber_);
+
+    // Write the number.
+    std::cout << number << " ";
+    std::cout.flush();
+
+    lock.unlock();
+
+    // Sleep / do work.
+    pause();
+
+    // Wait for all the showNumber functions to write.
+    lock.lock();
 
     // Write the number.
     std::cout << number << " ";
