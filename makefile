@@ -1,9 +1,8 @@
 #
-# Makefile for the keysync program.
+# Makefile for the parallel program.
 # 
-# The interface for the program is written in Python
+# Little program to test C++ threading in Linux.
 # 
-# This program was written in C/C++ to test communication between Python and C/C++
 
 #
 # The processor that this computer is using
@@ -23,7 +22,7 @@ OPTIONS := -Wall -std=c++17
 #
 # Header files.
 #
-HEADERS := parallel.h
+HEADERS := parallel.h thread_pool.h
 
 #
 # Source objects (prefix with obj/)
