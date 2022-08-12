@@ -6,12 +6,16 @@
 
 // System Headers.
 #include <iostream>
-#include <unistd.h>
 #include <thread>
 #include <functional>
 
 // Application Headers.
 #include "thread_pool.h"
+
+
+
+// Mutex for the showNumber() function.
+std::mutex mutexShowNumber_;
 
 
 
@@ -21,11 +25,15 @@ void showNumber
     int number  ///< Specifies the number to display.
 )
 {
+    // Wait for 1 second.
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    // Wait for all showNumber functions to finish.
+    std::unique_lock <std::mutex> lock(mutexShowNumber_);
+
+    // Write the number.
     std::cout << number << " ";
     std::cout.flush();
-
-    // Wait for 1 second.
-    usleep(1000000);
 }
 
 
