@@ -22,7 +22,7 @@ public:
     ~ThreadPool();
 
 private:
-    // Mutex for the add task function.
+    // Mutex for the add task functions.
     std::mutex mutexAddTask_;
 
     // Condition to signal task in the queue.
