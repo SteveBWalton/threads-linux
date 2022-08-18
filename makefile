@@ -32,12 +32,15 @@ obj/parallel.o \
 obj/thread_pool.o
 
 bin/parallel : $(OBJS)
+	@mkdir -p $(@D)
 	g++ $(OPTIONS) -o bin/parallel $(OBJS) $(LIBDIR) $(LIBS)
 
 obj/parallel.o : parallel.cpp $(HEADERS)
+	@mkdir -p $(@D)
 	g++ -c $(OPTIONS) -o obj/parallel.o parallel.cpp
 
 obj/thread_pool.o : thread_pool.cpp $(HEADERS)
+	@mkdir -p $(@D)
 	g++ -c $(OPTIONS) -o obj/thread_pool.o thread_pool.cpp
 
 clean:
