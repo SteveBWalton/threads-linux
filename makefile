@@ -44,6 +44,6 @@ obj/thread_pool.o : thread_pool.cpp $(HEADERS)
 	g++ -c $(OPTIONS) -o obj/thread_pool.o thread_pool.cpp
 
 clean:
-	-rm bin/parallel 2>/dev/null
-	-rm $(OBJS) 2>/dev/null
+	-rm -f bin/parallel
+	-rm -f $(OBJS)
 
