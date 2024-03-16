@@ -43,6 +43,7 @@ void showNumber
     std::cout << number << " ";
     std::cout.flush();
 
+    // Signal write is complete.
     lock.unlock();
 
     // Sleep / do work.
