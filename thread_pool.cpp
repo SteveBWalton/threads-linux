@@ -144,6 +144,7 @@ void ThreadPool::threadEntry
 
 
 
+/// Wait for all the threads to finish.
 void ThreadPool::waitAllFinish()
 {
     // Wait for the num task functions to finish. 
@@ -159,6 +160,7 @@ void ThreadPool::waitAllFinish()
 
 
 
+/// Stop any threads in the pool from accepting new tasks.
 void ThreadPool::stopMultithreading()
 {
     // Wait for all add task functions to finish.
@@ -170,6 +172,7 @@ void ThreadPool::stopMultithreading()
 
 
 
+/// Allow the threads in the pool to accept new tasks.
 void ThreadPool::startMultithreading()
 {
     // Wait for all add task functions to finish.
