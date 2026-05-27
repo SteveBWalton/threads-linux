@@ -12,50 +12,7 @@
 
 // Application Headers.
 #include "thread_pool.h"
-
-
-
-// Mutex for the showNumber() function.
-std::mutex mutexShowNumber_;
-
-
-void pause()
-{
-    // Wait for 1 second.
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-}
-
-
-
-/// Display a number and then wait for one second.
-void showNumber
-(
-    int number  ///< Specifies the number to display.
-)
-{
-    // Sleep / do work.
-    pause();
-
-    // Wait for all showNumber functions to write.
-    std::unique_lock <std::mutex> lock(mutexShowNumber_);
-
-    // Write the number.
-    std::cout << number << " ";
-    std::cout.flush();
-
-    // Signal write is complete.
-    lock.unlock();
-
-    // Sleep / do work.
-    pause();
-
-    // Wait for all the showNumber functions to write.
-    lock.lock();
-
-    // Write the number.
-    std::cout << number << " ";
-    std::cout.flush();
-}
+#include "show_number.h"
 
 
 
@@ -71,18 +28,24 @@ int main
     // Welcome message.
     std::cout << "Hello from Parallel." << std::endl;
 
-    // Call the function n times in serial.
+    std::vector<ShowNumber> showNumbers;
+    showNumbers.reserve(NUM_LOOPS);
+
+    // Create and call the class in serial.
+    std::cout << "In Sequence." << std::endl;
     for (int i = 0; i < NUM_LOOPS; i++)
     {
-        showNumber(i);
+        showNumbers.emplace_back(ShowNumber(i));
+        showNumbers[i].execute();
     }
     std::cout << std::endl;
 
     // Call the function n times on a new thread each time.
+    std::cout << "In a Thread object each." << std::endl;
     std::thread* myThreads[NUM_LOOPS];
     for (int i = 0; i < NUM_LOOPS; i++)
     {
-        myThreads[i] = new std::thread(showNumber, i);
+        myThreads[i] = new std::thread(&ShowNumber::execute, &showNumbers[i]);
     }
 
     // Wait for each thread to finish.
@@ -94,29 +57,32 @@ int main
     std::cout << std::endl;
 
     // Call the function n times with thread pool object.
+    std::cout << "In a ThreadPool(4) object." << std::endl;
     ThreadPool threadPool(4);
     for (int i = 0; i < NUM_LOOPS; i++)
     {
-        threadPool.addTask(std::bind(showNumber, i));
+        threadPool.addTask(std::bind(&ShowNumber::execute, &showNumbers[i]));
     }
     threadPool.waitAllFinish();
-    threadPool.waitAllFinish();
+    // threadPool.waitAllFinish();
     std::cout << std::endl;
 
     // Lets go again with the thread pool.
+    std::cout << "In a ThreadPool(4) object with multi-threading off." << std::endl;
     threadPool.stopMultithreading();
     for (int i = 0; i < NUM_LOOPS; i++)
     {
-        threadPool.addTask(std::bind(showNumber, i));
+        threadPool.addTask(std::bind(&ShowNumber::execute, &showNumbers[i]));
     }
     threadPool.waitAllFinish();
     std::cout << std::endl;
 
     // Lets go again with the thread pool.
+    std::cout << "In a ThreadPool(4) object with multi-threading back on." << std::endl;
     threadPool.startMultithreading();
     for (int i = 0; i < NUM_LOOPS; i++)
     {
-        threadPool.addTask(std::bind(showNumber, i));
+        threadPool.addTask(std::bind(&ShowNumber::execute, &showNumbers[i]));
     }
     threadPool.waitAllFinish();
     std::cout << std::endl;

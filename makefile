@@ -22,14 +22,15 @@ OPTIONS := -Wall -std=c++17
 #
 # Header files.
 #
-HEADERS := parallel.h thread_pool.h
+HEADERS := parallel.h thread_pool.h show_number.h
 
 #
 # Source objects (prefix with obj/)
 #
 OBJS := \
 obj/parallel.o \
-obj/thread_pool.o
+obj/thread_pool.o \
+obj/show_number.o
 
 bin/parallel : $(OBJS)
 	@mkdir -p $(@D)
@@ -42,6 +43,11 @@ obj/parallel.o : parallel.cpp $(HEADERS)
 obj/thread_pool.o : thread_pool.cpp $(HEADERS)
 	@mkdir -p $(@D)
 	g++ -c $(OPTIONS) -o obj/thread_pool.o thread_pool.cpp
+
+obj/show_number.o : show_number.cpp $(HEADERS)
+	@mkdir -p $(@D)
+	g++ -c $(OPTIONS) -o obj/show_number.o show_number.cpp
+
 
 clean:
 	-rm -f bin/parallel
