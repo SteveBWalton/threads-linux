@@ -48,7 +48,7 @@ ThreadPool::~ThreadPool()
     }
 
     // Wait for all threads to stop.
-    std::cout << "Joining threads" << std::endl;
+    std::cout << "Joining threadpool threads." << std::endl;
     for (auto& thread : _threads)
     {
         thread.join();
@@ -118,7 +118,7 @@ void ThreadPool::threadEntry
                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
                 // No tasks to do, so we are shutting down.
-                std::cout << "Thread " << i << " terminates" << std::endl;
+                std::cout << "ThreadPool thread " << i << " terminates" << std::endl;
 
                 // Close the thread.
                 return;

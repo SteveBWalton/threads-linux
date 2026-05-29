@@ -78,11 +78,21 @@ int main
     std::cout << std::endl;
 
     // Lets go again with the thread pool.
-    std::cout << "In a ThreadPool(4) object with multi-threading back on." << std::endl;
+    std::cout << "In a ThreadPool(4) object with multi-threading back on and pause in the middle." << std::endl;
     threadPool.startMultithreading();
     for (int i = 0; i < NUM_LOOPS; i++)
     {
         threadPool.addTask(std::bind(&ShowNumber::execute, &showNumbers[i]));
+        // Pause after the first 10.
+        if (i == 10)
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+        }
+        if (i == 20)
+        {
+            threadPool.waitAllFinish();
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+        }
     }
     threadPool.waitAllFinish();
     std::cout << std::endl;
