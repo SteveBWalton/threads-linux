@@ -37,6 +37,7 @@ ThreadPool::ThreadPool
 // Close all the threads.
 ThreadPool::~ThreadPool()
 {
+    // Lock ends after this block.
     {
         // Wait for all add task functions to finish.
         std::unique_lock <std::mutex> lock(_mutexAddTask);
@@ -132,7 +133,7 @@ void ThreadPool::threadEntry
         // Do the task without holding any locks.
         nextTask();
 
-        // The task is finshed.
+        // The task is finished.
         _numTasksPending--;
         if (_numTasksPending == 0)
         {
@@ -153,7 +154,7 @@ void ThreadPool::waitAllFinish()
     // Check for any pending tasks.
     if (_numTasksPending > 0)
     {
-        // Wait for nofication that numJobsPending_ has reached zero.
+        // Wait for notification that numJobsPending_ has reached zero.
         _condNumTasksZero.wait(lock);
     }
 }
